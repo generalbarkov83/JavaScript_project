@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCTP Module 3 - CRM Portal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background: url('/mnt/data/pexels-mart-production-7709299.jpg') no-repeat center center/cover;
+            color: white;
+        }
+        h2 {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            color: black;
+        }
+        input, select, button {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            background: rgba(255, 255, 255, 0.9);
+            margin: 10px 0;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 5px;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+            color: black;
+        }
+        button {
+            cursor: pointer;
+            margin-top: 5px;
+            background: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        #loading {
+            display: none;
+            text-align: center;
+            font-size: 18px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>CRM Portal</h2>
+    <form id="customer-form">
+        <select id="salutation" required>
+            <option value="">Select Salutation</option>
+            <option value="Mr.">Mr.</option>
+            <option value="Ms.">Ms.</option>
+            <option value="Mrs.">Mrs.</option>
+            <option value="Dr.">Dr.</option>
+            <option value="Prof.">Prof.</option>
+        </select>
+        <input type="text" id="first-name" placeholder="First Name" required>
+        <input type="text" id="last-name" placeholder="Last Name" required>
+        <input type="text" id="mobile" placeholder="Mobile Number" required>
+        <input type="email" id="email" placeholder="Email Address" required>
+        <select id="source" required>
+            <option value="">Select Source</option>
+            <option value="Website">Website</option>
+            <option value="Chat">Chat</option>
+            <option value="Call In">Call In</option>
+            <option value="Email">Email</option>
+            <option value="Social Media">Social Media</option>
+        </select>
+        <input type="datetime-local" id="date-added" required>
+        <button type="submit">Add Customer</button>
+    </form>
+    <div id="loading">Loading...</div>
+    <ul id="customer-list"></ul>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let customerForm = document.getElementById("customer-form");
+            let customerList = document.getElementById("customer-list");
+            let loading = document.getElementById("loading");
+            let customers = [];
+
+            function renderCustomers() {
+                customerList.innerHTML = "";
+                loading.style.display = "block";
+                setTimeout(() => {
+                    loading.style.display = "none";
+                    for (let i = 0; i < customers.length; i++) {
+                        let customer = customers[i];
+                        let li = document.createElement("li");
+                        li.innerHTML = `
+                            <strong>${customer.salutation} ${customer.firstName} ${customer.lastName}</strong><br>
+                            Mobile: ${customer.mobile}<br>
+                            Email: ${customer.email}<br>
+                            Source: ${customer.source}<br>
+                            Date Added: ${customer.dateAdded}<br>
+                            <button onclick="editCustomer(${i})">Edit</button>
+                            <button onclick="deleteCustomer(${i})">Delete</button>
+                        `;
+                        customerList.appendChild(li);
+                    }
+                }, 1000);
+            }
+
+            customerForm.addEventListener("submit", function (event) {
+                event.preventDefault();
+                let salutation = document.getElementById("salutation").value;
+                let firstName = document.getElementById("first-name").value;
+                let lastName = document.getElementById("last-name").value;
+                let mobile = document.getElementById("mobile").value;
+                let email = document.getElementById("email").value;
+                let source = document.getElementById("source").value;
+                let dateAdded = document.getElementById("date-added").value;
+                
+                if (email.indexOf("@") === -1) {
+                    alert("Invalid email format. Email must contain '@'");
+                } else if (mobile.length !== 8 || isNaN(mobile)) {
+                    alert("Invalid mobile number. Must be 8 digits long.");
+                } else {
+                    customers.push({ salutation, firstName, lastName, mobile, email, source, dateAdded });
+                    renderCustomers();
+                    customerForm.reset();
+                }
+            });
+
+            window.editCustomer = function(index) {
+                let customer = customers[index];
+                document.getElementById("salutation").value = customer.salutation;
+                document.getElementById("first-name").value = customer.firstName;
+                document.getElementById("last-name").value = customer.lastName;
+                document.getElementById("mobile").value = customer.mobile;
+                document.getElementById("email").value = customer.email;
+                document.getElementById("source").value = customer.source;
+                document.getElementById("date-added").value = customer.dateAdded;
+                customers.splice(index, 1);
+                renderCustomers();
+            };
+
+            window.deleteCustomer = function(index) {
+                customers.splice(index, 1);
+                renderCustomers();
+            };
+        });
+    </script>
+</body>
+</html>
