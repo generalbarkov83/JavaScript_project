@@ -41,12 +41,26 @@
       text-align: center;
       padding: 10px;
     }
+
+    #logo {
+      width: 40px; /* Adjust logo size */
+      height: auto;
+      margin-right: 10px;
+    }
+
+    .header-title {
+      display: flex;
+      align-items: center; /* Align logo and text vertically */
+    }
   </style>
 </head>
 
 <body>
   <div class="container">
-    <h1 class="mb-3">Inderpaul's CRM</h1>
+    <div class="header-title mb-3">
+      <img id="logo" src="https://cdn-icons-png.flaticon.com/512/8021/8021001.png" alt="CRM Portal Logo" />
+      <h1>Inderpaul's CRM</h1>
+    </div>
     <div id="formContainer">
       <ul id="errorList"></ul>
 
