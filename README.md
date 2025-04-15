@@ -1,4 +1,4 @@
-# module3_project
+# JavaScript_project
 
 Reminder on git workflow
 git add <file_name>
